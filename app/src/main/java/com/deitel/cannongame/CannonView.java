@@ -8,10 +8,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
@@ -172,6 +175,14 @@ public class CannonView extends SurfaceView
       int targetY = (int) ((0.5 - TARGET_LENGTH_PERCENT / 2) *
          screenHeight);
 
+      final Resources resources = getContext().getResources();
+      final TypedArray typedArray = resources.obtainTypedArray(R.array.targets);
+      final int imageCount = typedArray.getIndexCount();
+      int[] mImageResIds = new int[imageCount];
+      for (int i = 0; i < imageCount; i++) {
+         mImageResIds[i] = typedArray.getResourceId(i, 0);
+      }
+      typedArray.recycle();
       // add TARGET_PIECES Targets to the Target list
       for (int n = 0; n < TARGET_PIECES; n++) {
 
@@ -181,15 +192,13 @@ public class CannonView extends SurfaceView
             (TARGET_MAX_SPEED_PERCENT - TARGET_MIN_SPEED_PERCENT) +
             TARGET_MIN_SPEED_PERCENT);
 
-         // alternate Target colors between dark and light
-         int color =  (n % 2 == 0) ?
-            getResources().getColor(R.color.dark) :
-            getResources().getColor(R.color.light);
+         // cycle through the target images
+         int imageID =  mImageResIds[n % imageCount];
 
          velocity *= -1; // reverse the initial velocity for next Target
 
          // create and add a new Target to the Target list
-         targets.add(new Target(this, color, HIT_REWARD, targetX, targetY,
+         targets.add(new Target(this, (BitmapDrawable) resources.getDrawable(imageID), HIT_REWARD, targetX, targetY,
             (int) (TARGET_WIDTH_PERCENT * screenWidth),
             (int) (TARGET_LENGTH_PERCENT * screenHeight),
             (int) velocity));

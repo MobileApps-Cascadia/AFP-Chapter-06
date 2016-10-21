@@ -2,15 +2,27 @@
 // Subclass of GameElement customized for the Target
 package com.deitel.cannongame;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+
 public class Target extends GameElement {
    private int hitReward; // the hit reward for this target
+   private Bitmap bitmap;
 
    // constructor
-   public Target(CannonView view, int color, int hitReward, int x, int y,
-      int width, int length, float velocityY) {
-      super(view, color, CannonView.TARGET_SOUND_ID, x, y, width, length,
+   public Target(CannonView view, BitmapDrawable bitmap, int hitReward, int x, int y,
+                 int width, int length, float velocityY) {
+      super(view, Color.TRANSPARENT, CannonView.TARGET_SOUND_ID, x, y, width, length,
          velocityY);
       this.hitReward = hitReward;
+      this.bitmap = bitmap.getBitmap();
+   }
+
+   @Override
+   public void draw(Canvas canvas) {
+      canvas.drawBitmap(bitmap, null, shape, paint);
    }
 
    // returns the hit reward for this Target

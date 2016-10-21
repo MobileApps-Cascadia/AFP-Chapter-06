@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="food">
+        <item>@drawable/broccoli</item>
+        <item>@drawable/carrot</item>
+        <item>@drawable/celery</item>
+        <item>@drawable/lettuce</item>
+        <item>@drawable/pepper</item>
+        <item>@drawable/pizza</item>
+        <item>@drawable/sweet</item>
+    </array>
+    <array name="targets">
+        <item>@drawable/alien</item>
+        <item>@drawable/death</item>
+        <item>@drawable/monster</item>
+        <item>@drawable/orange_monster</item>
+        <item>@drawable/zombie</item>
+    </array>
+</resources>

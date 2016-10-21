@@ -2,6 +2,7 @@
 // Displays and controls the Cannon Game
 package com.deitel.cannongame;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,11 +11,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
@@ -41,15 +44,15 @@ public class CannonView extends SurfaceView
 
    // constants for the Cannon
    public static final double CANNON_BASE_RADIUS_PERCENT = 2.0 / 40;
-   public static final double CANNON_BARREL_WIDTH_PERCENT = 1.0 / 40;
+   public static final double CANNON_BARREL_WIDTH_PERCENT = 1.0 / 30;
    public static final double CANNON_BARREL_LENGTH_PERCENT = 1.0 / 25;
 
    // constants for the Cannonball
-   public static final double CANNONBALL_RADIUS_PERCENT = 1.0 / 80;
+   public static final double CANNONBALL_RADIUS_PERCENT = 1.0 / 50;
    public static final double CANNONBALL_SPEED_PERCENT = 3.0 / 2;
 
    // constants for the Targets
-   public static final double TARGET_WIDTH_PERCENT = 1.0 / 40;
+   public static final double TARGET_WIDTH_PERCENT = 1.0 / 30;
    public static final double TARGET_LENGTH_PERCENT = 3.0 / 20;
    public static final double TARGET_FIRST_X_PERCENT = 3.0 / 5;
    public static final double TARGET_SPACING_PERCENT = 1.0 / 60;
@@ -105,14 +108,16 @@ public class CannonView extends SurfaceView
       getHolder().addCallback(this);
 
       // configure audio attributes for game audio
-      AudioAttributes.Builder attrBuilder = new AudioAttributes.Builder();
-      attrBuilder.setUsage(AudioAttributes.USAGE_GAME);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         AudioAttributes.Builder attrBuilder = new AudioAttributes.Builder();
+         attrBuilder.setUsage(AudioAttributes.USAGE_GAME);
 
-      // initialize SoundPool to play the app's three sound effects
-      SoundPool.Builder builder = new SoundPool.Builder();
-      builder.setMaxStreams(1);
-      builder.setAudioAttributes(attrBuilder.build());
-      soundPool = builder.build();
+         // initialize SoundPool to play the app's three sound effects
+         SoundPool.Builder builder = new SoundPool.Builder();
+         builder.setMaxStreams(1);
+         builder.setAudioAttributes(attrBuilder.build());
+         soundPool = builder.build();
+      }
 
       // create Map of sounds and pre-load sounds
       soundMap = new SparseIntArray(3); // create new SparseIntArray
@@ -158,12 +163,29 @@ public class CannonView extends SurfaceView
    }
 
    // reset all the screen elements and start a new game
+   @TargetApi(19)
    public void newGame() {
+      // get the image IDs for the ammunition
+      final Resources resources = getContext().getResources();
+      final TypedArray amTypedArray = resources.obtainTypedArray(R.array.food);
+      final int ammunitionCount = amTypedArray.length();
+      Bitmap[] mAmmunition = new Bitmap[ammunitionCount];
+      for (int idx = 0; idx < ammunitionCount; idx++) {
+         int id = amTypedArray.getResourceId(idx, 0);
+         Drawable drawable = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ?
+                 resources.getDrawable(id, getContext().getTheme()) :
+                 resources.getDrawable(id);
+         mAmmunition[idx] = ((BitmapDrawable) drawable).getBitmap();
+      }
+      amTypedArray.recycle();
+
+
       // construct a new Cannon
       cannon = new Cannon(this,
          (int) (CANNON_BASE_RADIUS_PERCENT * screenHeight),
          (int) (CANNON_BARREL_LENGTH_PERCENT * screenWidth),
-         (int) (CANNON_BARREL_WIDTH_PERCENT * screenHeight));
+         (int) (CANNON_BARREL_WIDTH_PERCENT * screenHeight),
+              mAmmunition);
 
       Random random = new Random(); // for determining random velocities
       targets = new ArrayList<>(); // construct a new Target list
@@ -175,9 +197,8 @@ public class CannonView extends SurfaceView
       int targetY = (int) ((0.5 - TARGET_LENGTH_PERCENT / 2) *
          screenHeight);
 
-      final Resources resources = getContext().getResources();
       final TypedArray typedArray = resources.obtainTypedArray(R.array.targets);
-      final int imageCount = typedArray.getIndexCount();
+      final int imageCount = typedArray.length();
       int[] mImageResIds = new int[imageCount];
       for (int i = 0; i < imageCount; i++) {
          mImageResIds[i] = typedArray.getResourceId(i, 0);
@@ -197,8 +218,12 @@ public class CannonView extends SurfaceView
 
          velocity *= -1; // reverse the initial velocity for next Target
 
+         Drawable drawable = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ?
+                 resources.getDrawable(imageID, getContext().getTheme()) :
+                 resources.getDrawable(imageID);
+
          // create and add a new Target to the Target list
-         targets.add(new Target(this, (BitmapDrawable) resources.getDrawable(imageID), HIT_REWARD, targetX, targetY,
+         targets.add(new Target(this, (BitmapDrawable) drawable, HIT_REWARD, targetX, targetY,
             (int) (TARGET_WIDTH_PERCENT * screenWidth),
             (int) (TARGET_LENGTH_PERCENT * screenHeight),
             (int) velocity));

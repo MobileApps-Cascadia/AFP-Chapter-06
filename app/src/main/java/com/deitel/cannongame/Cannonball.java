@@ -2,25 +2,41 @@
 // Represents the Cannonball that the Cannon fires
 package com.deitel.cannongame;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 
 public class Cannonball extends GameElement {
    private float velocityX;
    private boolean onScreen;
+   private int radius; // store radius rather than calculate
+   private Bitmap bitmap;
 
    // constructor
-   public Cannonball(CannonView view, int color, int soundId, int x,
-      int y, int radius, float velocityX, float velocityY) {
-      super(view, color, soundId, x, y,
+   public Cannonball(CannonView view, Bitmap bitmap, int soundId, int x,
+                     int y, int radius, float velocityX, float velocityY) {
+      super(view, Color.WHITE, soundId, x, y,
          2 * radius, 2 * radius, velocityY);
+      this.radius = radius;
+      this.bitmap = bitmap;
       this.velocityX = velocityX;
       onScreen = true;
+      // adjust shape size to keep bitmap in proportion
+      double aspectRatio = (double) bitmap.getWidth() / (double) bitmap.getHeight();
+      if (bitmap.getWidth() > bitmap.getHeight()) {
+         int width = (int) (aspectRatio / radius);
+         shape.right = shape.left + width;
+      }
+      else if (bitmap.getWidth() < bitmap.getHeight()) {
+         int height = (int) (radius / aspectRatio);
+         shape.bottom = shape.top + height;
+      }
    }
 
    // get Cannonball's radius
    private int getRadius() {
-      return (shape.right - shape.left) / 2;
+      return radius;
    }
 
    // test whether Cannonball collides with the given GameElement
@@ -47,17 +63,16 @@ public class Cannonball extends GameElement {
       shape.offset((int) (velocityX * interval), 0);
 
       // if Cannonball goes off the screen
-      if (shape.top < 0 || shape.left < 0 ||
-         shape.bottom > view.getScreenHeight() ||
-         shape.right > view.getScreenWidth())
+      if ((shape.top < 0 || shape.left < 0) ||
+             (shape.bottom > view.getScreenHeight() ||
+              shape.right > view.getScreenWidth())) {
          onScreen = false; // set it to be removed
    }
-
+    }
    // draws the Cannonball on the given canvas
    @Override
    public void draw(Canvas canvas) {
-      canvas.drawCircle(shape.left + getRadius(),
-         shape.top + getRadius(), getRadius(), paint);
+        canvas.drawBitmap(bitmap, null, shape, paint);
    }
 }
 

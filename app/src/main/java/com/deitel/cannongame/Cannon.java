@@ -2,6 +2,7 @@
 // Represents Cannon and fires the Cannonball
 package com.deitel.cannongame;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,13 +16,16 @@ public class Cannon {
    private Cannonball cannonball; // the Cannon's Cannonball
    private Paint paint = new Paint(); // Paint used to draw the cannon
    private CannonView view; // view containing the Cannon
+   private Bitmap[] ammunition; // image IDs for the cannonballs
+   private int shotCount = 0;
 
    // constructor
-   public Cannon(CannonView view, int baseRadius, int barrelLength,
-      int barrelWidth) {
+   public Cannon(CannonView view, int baseRadius, int barrelLength, int barrelWidth,
+                 Bitmap[] ammunition) {
       this.view = view;
       this.baseRadius = baseRadius;
       this.barrelLength = barrelLength;
+      this.ammunition = ammunition;
       paint.setStrokeWidth(barrelWidth); // set width of barrel
       paint.setColor(Color.BLACK); // Cannon's color is Black
       align(Math.PI / 2); // Cannon barrel facing straight right
@@ -49,8 +53,9 @@ public class Cannon {
       int radius = (int) (view.getScreenHeight() *
          CannonView.CANNONBALL_RADIUS_PERCENT);
 
+
       // construct Cannonball and position it in the Cannon
-      cannonball = new Cannonball(view, Color.BLACK,
+      cannonball = new Cannonball(view, ammunition[shotCount++ % ammunition.length],
          CannonView.CANNON_SOUND_ID, -radius,
          view.getScreenHeight() / 2 - radius, radius, velocityX,
          velocityY);

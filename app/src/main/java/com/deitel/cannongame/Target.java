@@ -12,16 +12,22 @@ public class Target extends GameElement {
    private Bitmap bitmap;
 
    // constructor
-   public Target(CannonView view, BitmapDrawable bitmap, int hitReward, int x, int y,
+   public Target(CannonView view, BitmapDrawable drawable, int hitReward, int x, int y,
                  int width, int length, float velocityY) {
-      super(view, Color.TRANSPARENT, CannonView.TARGET_SOUND_ID, x, y, width, length,
+      super(view, Color.WHITE, CannonView.TARGET_SOUND_ID, x, y, width, length,
          velocityY);
       this.hitReward = hitReward;
-      this.bitmap = bitmap.getBitmap();
+      this.bitmap = drawable.getBitmap();
+      // adjust shape to keep bitmap in proportion
+      float aspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
+      // we know the bars were fairly narrow, so shorten the bitmap to fit
+      int height = (int)(aspectRatio * width);
+      shape.bottom = shape.top + height;
    }
 
    @Override
    public void draw(Canvas canvas) {
+      //canvas.drawBitmap(bitmap, shape.left, shape.top, paint);
       canvas.drawBitmap(bitmap, null, shape, paint);
    }
 

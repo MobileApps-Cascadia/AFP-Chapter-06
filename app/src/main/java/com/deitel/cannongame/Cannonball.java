@@ -5,21 +5,24 @@ package com.deitel.cannongame;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+
+import static android.R.attr.radius;
 
 public class Cannonball extends GameElement {
    private float velocityX;
    private boolean onScreen;
-   private int radius; // store radius rather than calculate
+   private Matrix matrix;
    private Bitmap bitmap;
 
    // constructor
    public Cannonball(CannonView view, Bitmap bitmap, int soundId, int x,
-                     int y, int radius, float velocityX, float velocityY) {
+                     int y, int radius, float velocityX, float velocityY, double angle) {
       super(view, Color.WHITE, soundId, x, y,
          2 * radius, 2 * radius, velocityY);
-      this.radius = radius;
       this.bitmap = bitmap;
+
       this.velocityX = velocityX;
       onScreen = true;
       // adjust shape size to keep bitmap in proportion
@@ -32,11 +35,16 @@ public class Cannonball extends GameElement {
          int height = (int) (radius / aspectRatio);
          shape.bottom = shape.top + height;
       }
-   }
-
-   // get Cannonball's radius
-   private int getRadius() {
-      return radius;
+      float width = (float) radius * 2;
+      float scale = Math.max(width / (float)bitmap.getWidth(), width / (float)bitmap.getHeight());
+      // Create matrix and rotate to match angle
+      matrix = new Matrix(); // default is identity matrix
+      // add resize to matrix
+      matrix.setScale(scale, scale);
+      // Rotate the matrix about the center
+      matrix.postRotate((float)angle, radius, radius);
+      // move the matrix to the start position
+      matrix.postTranslate(x, y);
    }
 
    // test whether Cannonball collides with the given GameElement
@@ -59,6 +67,8 @@ public class Cannonball extends GameElement {
    public void update(double interval) {
       super.update(interval); // updates Cannonball's vertical position
 
+      matrix.postTranslate(velocityX * (float)interval, velocityY * (float)interval);
+
       // update horizontal position
       shape.offset((int) (velocityX * interval), 0);
 
@@ -72,7 +82,7 @@ public class Cannonball extends GameElement {
    // draws the Cannonball on the given canvas
    @Override
    public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, null, shape, paint);
+        canvas.drawBitmap(bitmap, matrix, paint);
    }
 }
 

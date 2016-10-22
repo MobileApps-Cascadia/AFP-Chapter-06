@@ -58,7 +58,7 @@ public class Cannon {
       cannonball = new Cannonball(view, ammunition[shotCount++ % ammunition.length],
          CannonView.CANNON_SOUND_ID, -radius,
          view.getScreenHeight() / 2 - radius, radius, velocityX,
-         velocityY);
+         velocityY, barrelAngle);
 
       cannonball.playSound(); // play fire Cannonball sound
    }

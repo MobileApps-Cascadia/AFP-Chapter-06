@@ -19,6 +19,7 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,15 +49,15 @@ public class CannonView extends SurfaceView
    public static final double CANNON_BARREL_LENGTH_PERCENT = 1.0 / 25;
 
    // constants for the Cannonball
-   public static final double CANNONBALL_RADIUS_PERCENT = 1.0 / 50;
+   public static final double CANNONBALL_RADIUS_PERCENT = 1.0 / 40;
    public static final double CANNONBALL_SPEED_PERCENT = 3.0 / 2;
 
    // constants for the Targets
-   public static final double TARGET_WIDTH_PERCENT = 1.0 / 30;
+   public static final double TARGET_WIDTH_PERCENT = 1.0 / 25;
    public static final double TARGET_LENGTH_PERCENT = 3.0 / 20;
    public static final double TARGET_FIRST_X_PERCENT = 3.0 / 5;
-   public static final double TARGET_SPACING_PERCENT = 1.0 / 60;
-   public static final double TARGET_PIECES = 9;
+   public static final double TARGET_SPACING_PERCENT = 1.0 / 50;
+   public static final double TARGET_PIECES = 7;
    public static final double TARGET_MIN_SPEED_PERCENT = 3.0 / 4;
    public static final double TARGET_MAX_SPEED_PERCENT = 6.0 / 4;
 
@@ -118,11 +119,14 @@ public class CannonView extends SurfaceView
          builder.setAudioAttributes(attrBuilder.build());
          soundPool = builder.build();
       }
+      else {
+         soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+      }
 
       // create Map of sounds and pre-load sounds
       soundMap = new SparseIntArray(3); // create new SparseIntArray
       soundMap.put(TARGET_SOUND_ID,
-         soundPool.load(context, R.raw.target_hit, 1));
+         soundPool.load(context, R.raw.smashing, 1));
       soundMap.put(CANNON_SOUND_ID,
          soundPool.load(context, R.raw.cannon_fire, 1));
       soundMap.put(BLOCKER_SOUND_ID,
@@ -369,12 +373,12 @@ public class CannonView extends SurfaceView
       canvas.drawText(getResources().getString(
          R.string.time_remaining_format, timeLeft), 50, 100, textPaint);
 
-      cannon.draw(canvas); // draw the cannon
-
       // draw the GameElements
       if (cannon.getCannonball() != null &&
          cannon.getCannonball().isOnScreen())
          cannon.getCannonball().draw(canvas);
+
+      cannon.draw(canvas); // draw the cannon
 
       blocker.draw(canvas); // draw the blocker
 

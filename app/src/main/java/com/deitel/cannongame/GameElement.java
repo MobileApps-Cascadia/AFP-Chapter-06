@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import static com.deitel.cannongame.R.raw.bounce;
+
 public class GameElement {
    protected CannonView view; // the view that contains this GameElement
    protected Paint paint = new Paint(); // Paint to draw this GameElement
@@ -19,7 +21,7 @@ public class GameElement {
       this.view = view;
       paint.setColor(color);
       shape = new Rect(x, y, x + width, y + length); // set bounds
-      this.soundId = soundId;
+
       this.velocityY = velocityY;
    }
 
@@ -31,6 +33,7 @@ public class GameElement {
       // if this GameElement collides with the wall, reverse direction
       if (shape.top < 0 && velocityY < 0 ||
          shape.bottom > view.getScreenHeight() && velocityY > 0)
+         view.playSound(CannonView.BOUNCE_SOUND_ID);
          velocityY *= -1; // reverse this GameElement's velocity
    }
 

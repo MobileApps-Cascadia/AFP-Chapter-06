@@ -2,12 +2,23 @@
 // Represents Cannon and fires the Cannonball
 package com.deitel.cannongame;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.widget.ImageView;
 
-public class Cannon {
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+
+public class Cannon extends Application{
    private int baseRadius; // Cannon base's radius
    private int barrelLength; // Cannon barrel's length
    private Point barrelEnd = new Point(); // endpoint of Cannon's barrel
@@ -26,6 +37,7 @@ public class Cannon {
       paint.setColor(Color.BLACK); // Cannon's color is Black
       align(Math.PI / 2); // Cannon barrel facing straight right
    }
+
 
    // aligns the Cannon's barrel to the given angle
    public void align(double barrelAngle) {
@@ -58,6 +70,8 @@ public class Cannon {
       cannonball.playSound(); // play fire Cannonball sound
    }
 
+
+
    // draws the Cannon on the Canvas
    public void draw(Canvas canvas) {
       // draw cannon barrel
@@ -67,6 +81,11 @@ public class Cannon {
       // draw cannon base
       canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
          (int) baseRadius, paint);
+      /*Drawable myImage = getResources().getDrawable(R.drawable.cannon);
+      myImage.setBounds(left, top, right, bottom);
+      myImage.draw(canvas);*/
+
+      //Code continued to crash do not know reason why
    }
 
    // returns the Cannonball that this Cannon fired

@@ -2,13 +2,17 @@
 // Represents the Cannonball that the Cannon fires
 package com.deitel.cannongame;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.content.Context;
 
 public class Cannonball extends GameElement {
    private float velocityX;
    private boolean onScreen;
-
+private Context mContext;
    // constructor
    public Cannonball(CannonView view, int color, int soundId, int x,
       int y, int radius, float velocityX, float velocityY) {
@@ -56,8 +60,15 @@ public class Cannonball extends GameElement {
    // draws the Cannonball on the given canvas
    @Override
    public void draw(Canvas canvas) {
-      canvas.drawCircle(shape.left + getRadius(),
-         shape.top + getRadius(), getRadius(), paint);
+      //draws the cannonball as an image
+    Resources res = mContext.getResources();
+    Drawable b = ResourcesCompat.getDrawable(res, R.drawable.cannonball, null);
+    // Drawable b = getResources().getDrawable(R.drawable.cannonball,null);
+     b.setBounds(shape.left,shape.top,shape.right,shape.bottom );
+    b.draw(canvas);
+
+     //canvas.drawCircle(shape.left + getRadius(),
+        //shape.top + getRadius(), getRadius(), paint);
    }
 }
 

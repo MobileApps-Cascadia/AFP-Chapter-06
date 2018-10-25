@@ -207,7 +207,7 @@ public class CannonView extends SurfaceView
          (int) (BLOCKER_WIDTH_PERCENT * screenWidth),
          (int) (BLOCKER_LENGTH_PERCENT * screenHeight),
          (float) (BLOCKER_SPEED_PERCENT * screenHeight));
-
+     // (float) (BLOCKER_SPEED_PERCENT * screenWidth));
       timeLeft = 10; // start the countdown at 10 seconds
 
       shotsFired = 0; // set the initial number of shots fired

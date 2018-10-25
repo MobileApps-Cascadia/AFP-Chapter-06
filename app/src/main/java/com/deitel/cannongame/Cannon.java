@@ -2,10 +2,14 @@
 // Represents Cannon and fires the Cannonball
 package com.deitel.cannongame;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 
 public class Cannon {
    private int baseRadius; // Cannon base's radius
@@ -15,7 +19,7 @@ public class Cannon {
    private Cannonball cannonball; // the Cannon's Cannonball
    private Paint paint = new Paint(); // Paint used to draw the cannon
    private CannonView view; // view containing the Cannon
-
+private Context mContext;
    // constructor
    public Cannon(CannonView view, int baseRadius, int barrelLength,
       int barrelWidth) {
@@ -61,12 +65,19 @@ public class Cannon {
    // draws the Cannon on the Canvas
    public void draw(Canvas canvas) {
       // draw cannon barrel
-      canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
-         barrelEnd.y, paint);
+            Resources res = mContext.getResources();
+            Drawable b = ResourcesCompat.getDrawable(res, R.drawable.cannon, null);
+      //Drawable b = getResources().getDrawable(R.drawable.cannonball,null);
+     // Drawable b = getResources().getDrawable(R.drawable.cannonball,null);
+            b.setBounds(0,(int) view.getScreenHeight() / 2, 0+ (int) baseRadius,
+             (int) view.getScreenHeight() / 2 +(int) baseRadius );
+             b.draw(canvas);
+     // canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
+       //  barrelEnd.y, paint);
 
       // draw cannon base
-      canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
-         (int) baseRadius, paint);
+     // canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
+      // (int) baseRadius, paint);
    }
 
    // returns the Cannonball that this Cannon fired

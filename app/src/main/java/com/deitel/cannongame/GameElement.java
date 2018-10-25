@@ -32,6 +32,11 @@ public class GameElement {
       if (shape.top < 0 && velocityY < 0 ||
          shape.bottom > view.getScreenHeight() && velocityY > 0)
          velocityY *= -1; // reverse this GameElement's velocity
+
+      //if this GameElement collides with the top or bottom of the screen
+      if(shape.left < 0 && velocityY < 0 || shape.right > view.getScreenWidth() && velocityY > 0 ){
+         playSound();
+      }
    }
 
    // draws this GameElement on the given Canvas

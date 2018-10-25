@@ -4,14 +4,25 @@ package com.deitel.cannongame;
 
 public class Blocker extends GameElement {
    private int missPenalty; // the miss penalty for this Blocker
-
+   private float velocityX; // horizontal velocity of this GameElement
    // constructor
    public Blocker(CannonView view, int color, int missPenalty, int x,
-      int y, int width, int length, float velocityY) {
+      int y, int width, int length, float velocityY){// float velocityX) {
       super(view, color, CannonView.BLOCKER_SOUND_ID, x, y, width, length,
          velocityY);
       this.missPenalty = missPenalty;
+      //this.velocityX = velocityX;
    }
+  /*  @Override
+    // update GameElement position and check for wall collisions
+    public void update(double interval) {
+    super.update(interval);
+       //if this GameElement collides with the top or bottom of the screen
+       if(shape.left < 0 && velocityX < 0 || shape.right > view.getScreenWidth() && velocityX > 0 ){
+          playSound();
+       }
+    }*/
+
 
    // returns the miss penalty for this Blocker
    public int getMissPenalty() {

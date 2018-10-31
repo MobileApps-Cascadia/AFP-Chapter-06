@@ -63,6 +63,8 @@ public class Cannonball extends GameElement {
       canvas.drawCircle(shape.left + getRadius(),
          shape.top + getRadius(), getRadius(), paint);
 
+      view.DrawCannonBallImg(canvas, view, shape.left, shape.top, getRadius());
+
 
    }
 }

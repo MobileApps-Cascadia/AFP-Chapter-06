@@ -87,6 +87,8 @@ public class CannonView extends SurfaceView
    // cannon images
    public Drawable cannon_img = getResources().getDrawable(R.drawable.cannon, null);
 
+   // cannonball img
+   public Drawable cannonBall_img = getResources().getDrawable(R.drawable.cannonball, null);
 
 
    // constants and variables for managing sounds
@@ -170,6 +172,12 @@ public class CannonView extends SurfaceView
    public void DrawCannonImg(Canvas canvas ,CannonView view ){
       cannon_img.setBounds(0,view.getScreenHeight()/2-75,200,view.getScreenHeight()/2+75);
       cannon_img.draw(canvas);
+   }
+
+   //create cannonball img
+   public  void DrawCannonBallImg(Canvas canvas, CannonView view, int left, int top, int r){
+      cannonBall_img.setBounds(left , top, left+2*r, top+2*r );
+      cannonBall_img.draw(canvas);
    }
 
    // reset all the screen elements and start a new game

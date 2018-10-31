@@ -6,11 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 
 public class Cannon {
    private int baseRadius; // Cannon base's radius
    private int barrelLength; // Cannon barrel's length
-   private Point barrelEnd = new Point(); // endpoint of Cannon's barrel
+   public Point barrelEnd = new Point(); // endpoint of Cannon's barrel
    private double barrelAngle; // angle of the Cannon's barrel
    private Cannonball cannonball; // the Cannon's Cannonball
    private Paint paint = new Paint(); // Paint used to draw the cannon
@@ -64,9 +65,14 @@ public class Cannon {
       canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
          barrelEnd.y, paint);
 
+
+
       // draw cannon base
       canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
          (int) baseRadius, paint);
+
+
+      view.DrawCannonImg(canvas, view);
    }
 
    // returns the Cannonball that this Cannon fired

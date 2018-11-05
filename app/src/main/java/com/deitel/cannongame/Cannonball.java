@@ -4,17 +4,22 @@ package com.deitel.cannongame;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+
 
 public class Cannonball extends GameElement {
    private float velocityX;
    private boolean onScreen;
+   private Drawable cannonbyrn;
 
    // constructor
    public Cannonball(CannonView view, int color, int soundId, int x,
-      int y, int radius, float velocityX, float velocityY) {
+      int y, int radius, float velocityX, float velocityY, Drawable cannonbyrn) {
+
       super(view, color, soundId, x, y,
          2 * radius, 2 * radius, velocityY);
       this.velocityX = velocityX;
+      this.cannonbyrn = cannonbyrn;
       onScreen = true;
    }
 
@@ -56,6 +61,9 @@ public class Cannonball extends GameElement {
    // draws the Cannonball on the given canvas
    @Override
    public void draw(Canvas canvas) {
+
+      //cannonbyrn.setBounds(shape.left + getRadius(), shape.top + getRadius(), getRadius()-shape.right, getRadius()-shape.bottom);
+      //cannonbyrn.draw(canvas);
       canvas.drawCircle(shape.left + getRadius(),
          shape.top + getRadius(), getRadius(), paint);
    }

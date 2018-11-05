@@ -8,10 +8,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
@@ -81,11 +83,13 @@ public class CannonView extends SurfaceView
    private double timeLeft; // time remaining in seconds
    private int shotsFired; // shots the user has fired
    private double totalElapsedTime; // elapsed seconds
+   private int score;
 
    // constants and variables for managing sounds
    public static final int TARGET_SOUND_ID = 0;
    public static final int CANNON_SOUND_ID = 1;
    public static final int BLOCKER_SOUND_ID = 2;
+   public static final int TOUCH_SOUND_ID = 3;
    private SoundPool soundPool; // plays sound effects
    private SparseIntArray soundMap; // maps IDs to SoundPool
 
@@ -112,13 +116,15 @@ public class CannonView extends SurfaceView
       soundPool = builder.build();
 
       // create Map of sounds and pre-load sounds
-      soundMap = new SparseIntArray(3); // create new SparseIntArray
+      soundMap = new SparseIntArray(4); // create new SparseIntArray
       soundMap.put(TARGET_SOUND_ID,
          soundPool.load(context, R.raw.target_hit, 1));
       soundMap.put(CANNON_SOUND_ID,
          soundPool.load(context, R.raw.cannon_fire, 1));
       soundMap.put(BLOCKER_SOUND_ID,
          soundPool.load(context, R.raw.blocker_hit, 1));
+      soundMap.put(TOUCH_SOUND_ID,
+              soundPool.load(context, R.raw.same_touch, 1));
 
       textPaint = new Paint();
       backgroundPaint = new Paint();
@@ -156,11 +162,14 @@ public class CannonView extends SurfaceView
 
    // reset all the screen elements and start a new game
    public void newGame() {
+       Drawable cannonbyrn_image = getResources().getDrawable(R.drawable.cannonbyrn);
       // construct a new Cannon
       cannon = new Cannon(this,
          (int) (CANNON_BASE_RADIUS_PERCENT * screenHeight),
          (int) (CANNON_BARREL_LENGTH_PERCENT * screenWidth),
-         (int) (CANNON_BARREL_WIDTH_PERCENT * screenHeight));
+         (int) (CANNON_BARREL_WIDTH_PERCENT * screenHeight),
+              cannonbyrn_image
+      );
 
       Random random = new Random(); // for determining random velocities
       targets = new ArrayList<>(); // construct a new Target list
@@ -209,6 +218,7 @@ public class CannonView extends SurfaceView
          (float) (BLOCKER_SPEED_PERCENT * screenHeight));
 
       timeLeft = 10; // start the countdown at 10 seconds
+      score = 0;
 
       shotsFired = 0; // set the initial number of shots fired
       totalElapsedTime = 0.0; // set the time elapsed to zero
@@ -334,6 +344,7 @@ public class CannonView extends SurfaceView
       // display time remaining
       canvas.drawText(getResources().getString(
          R.string.time_remaining_format, timeLeft), 50, 100, textPaint);
+      canvas.drawText(getResources().getString(R.string.score, score), 200, 300, textPaint);
 
       cannon.draw(canvas); // draw the cannon
 
@@ -362,6 +373,7 @@ public class CannonView extends SurfaceView
 
                // add hit rewards time to remaining time
                timeLeft += targets.get(n).getHitReward();
+               score++;
 
                cannon.removeCannonball(); // remove Cannonball from game
                targets.remove(n); // remove the Target that was hit
@@ -384,6 +396,11 @@ public class CannonView extends SurfaceView
 
          // deduct blocker's miss penalty from remaining time
          timeLeft -= blocker.getMissPenalty();
+      }
+
+      //if the blocker hits any end of the screen
+      if(blocker.shape.top < 5 || blocker.shape.bottom > screenHeight-10){
+         playSound(3);
       }
    }
 

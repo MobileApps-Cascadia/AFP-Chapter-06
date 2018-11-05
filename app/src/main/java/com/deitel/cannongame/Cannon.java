@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 public class Cannon {
    private int baseRadius; // Cannon base's radius
@@ -15,13 +17,17 @@ public class Cannon {
    private Cannonball cannonball; // the Cannon's Cannonball
    private Paint paint = new Paint(); // Paint used to draw the cannon
    private CannonView view; // view containing the Cannon
+   private Bitmap image;
+   private Drawable cannonbryn_image;
 
    // constructor
    public Cannon(CannonView view, int baseRadius, int barrelLength,
-      int barrelWidth) {
+      int barrelWidth, Drawable cannonbryn_image) {
       this.view = view;
       this.baseRadius = baseRadius;
       this.barrelLength = barrelLength;
+      this.cannonbryn_image = cannonbryn_image;
+      //this.image = image;
       paint.setStrokeWidth(barrelWidth); // set width of barrel
       paint.setColor(Color.BLACK); // Cannon's color is Black
       align(Math.PI / 2); // Cannon barrel facing straight right
@@ -53,7 +59,7 @@ public class Cannon {
       cannonball = new Cannonball(view, Color.BLACK,
          CannonView.CANNON_SOUND_ID, -radius,
          view.getScreenHeight() / 2 - radius, radius, velocityX,
-         velocityY);
+         velocityY, cannonbryn_image);
 
       cannonball.playSound(); // play fire Cannonball sound
    }

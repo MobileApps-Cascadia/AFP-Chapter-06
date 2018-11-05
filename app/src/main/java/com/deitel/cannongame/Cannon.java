@@ -2,10 +2,27 @@
 // Represents Cannon and fires the Cannonball
 package com.deitel.cannongame;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import java.io.File;
+import java.io.FileOutputStream;
+import android.content.ContextWrapper;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.app.Activity;
+import android.media.AudioAttributes;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
+
 
 public class Cannon {
    private int baseRadius; // Cannon base's radius
@@ -15,6 +32,7 @@ public class Cannon {
    private Cannonball cannonball; // the Cannon's Cannonball
    private Paint paint = new Paint(); // Paint used to draw the cannon
    private CannonView view; // view containing the Cannon
+
 
    // constructor
    public Cannon(CannonView view, int baseRadius, int barrelLength,
@@ -60,13 +78,20 @@ public class Cannon {
 
    // draws the Cannon on the Canvas
    public void draw(Canvas canvas) {
+
+
+       // use the cannon image
+       Resources res = view.getResources();
+       Bitmap b = BitmapFactory.decodeResource(res, R.drawable.cannon);
+       canvas.drawBitmap(b,0,view.getScreenHeight() / 3,null);
+
       // draw cannon barrel
-      canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
-         barrelEnd.y, paint);
+      //canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
+      //   barrelEnd.y, paint);
 
       // draw cannon base
-      canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
-         (int) baseRadius, paint);
+      //canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
+      //   (int) baseRadius, paint);
    }
 
    // returns the Cannonball that this Cannon fired

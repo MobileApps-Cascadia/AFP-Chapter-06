@@ -30,8 +30,15 @@ public class GameElement {
 
       // if this GameElement collides with the wall, reverse direction
       if (shape.top < 0 && velocityY < 0 ||
-         shape.bottom > view.getScreenHeight() && velocityY > 0)
+         shape.bottom > view.getScreenHeight() && velocityY > 0) {
          velocityY *= -1; // reverse this GameElement's velocity
+
+         // play bounce sound for blocker
+         if (this.getClass() == Blocker.class) {
+            view.playSound(CannonView.BLOCKER_BOUNCE_SOUND_ID);
+         }
+
+      }
    }
 
    // draws this GameElement on the given Canvas

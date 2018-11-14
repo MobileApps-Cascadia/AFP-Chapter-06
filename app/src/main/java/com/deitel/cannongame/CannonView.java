@@ -80,12 +80,15 @@ public class CannonView extends SurfaceView
    private boolean gameOver; // is the game over?
    private double timeLeft; // time remaining in seconds
    private int shotsFired; // shots the user has fired
+   private int Score;
    private double totalElapsedTime; // elapsed seconds
 
    // constants and variables for managing sounds
    public static final int TARGET_SOUND_ID = 0;
    public static final int CANNON_SOUND_ID = 1;
    public static final int BLOCKER_SOUND_ID = 2;
+   public static final int Bounce_Sound_ID = 3;
+
    private SoundPool soundPool; // plays sound effects
    private SparseIntArray soundMap; // maps IDs to SoundPool
 
@@ -112,13 +115,15 @@ public class CannonView extends SurfaceView
       soundPool = builder.build();
 
       // create Map of sounds and pre-load sounds
-      soundMap = new SparseIntArray(3); // create new SparseIntArray
+      soundMap = new SparseIntArray(4); // create new SparseIntArray
       soundMap.put(TARGET_SOUND_ID,
          soundPool.load(context, R.raw.target_hit, 1));
       soundMap.put(CANNON_SOUND_ID,
          soundPool.load(context, R.raw.cannon_fire, 1));
       soundMap.put(BLOCKER_SOUND_ID,
          soundPool.load(context, R.raw.blocker_hit, 1));
+      soundMap.put(Bounce_Sound_ID,
+      soundPool.load(context, R.raw.bounce,1));
 
       textPaint = new Paint();
       backgroundPaint = new Paint();
@@ -230,7 +235,8 @@ public class CannonView extends SurfaceView
       if (cannon.getCannonball() != null)
          cannon.getCannonball().update(interval);
 
-      blocker.update(interval); // update the blocker's position
+      blocker.update(interval,Bounce_Sound_ID); // update the blocker's position
+
 
       for (GameElement target : targets)
          target.update(interval); // update the target's position
@@ -295,7 +301,7 @@ public class CannonView extends SurfaceView
 
                // display number of shots fired and total time elapsed
                builder.setMessage(getResources().getString(
-                  R.string.results_format, shotsFired, totalElapsedTime));
+                  R.string.results_format, shotsFired, totalElapsedTime, Score ));
                builder.setPositiveButton(R.string.reset_game,
                   new DialogInterface.OnClickListener() {
                      // called when "Reset Game" Button is pressed
@@ -362,7 +368,7 @@ public class CannonView extends SurfaceView
 
                // add hit rewards time to remaining time
                timeLeft += targets.get(n).getHitReward();
-
+               Score += 1;
                cannon.removeCannonball(); // remove Cannonball from game
                targets.remove(n); // remove the Target that was hit
                --n; // ensures that we don't skip testing new target n

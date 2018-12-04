@@ -86,6 +86,7 @@ public class CannonView extends SurfaceView
    public static final int TARGET_SOUND_ID = 0;
    public static final int CANNON_SOUND_ID = 1;
    public static final int BLOCKER_SOUND_ID = 2;
+   public static final int BOUNCE_SOUND_ID = 3;
    private SoundPool soundPool; // plays sound effects
    private SparseIntArray soundMap; // maps IDs to SoundPool
 
@@ -119,6 +120,7 @@ public class CannonView extends SurfaceView
          soundPool.load(context, R.raw.cannon_fire, 1));
       soundMap.put(BLOCKER_SOUND_ID,
          soundPool.load(context, R.raw.blocker_hit, 1));
+      soundMap.put(BOUNCE_SOUND_ID, soundPool.load(context, R.raw.bounce, 1));
 
       textPaint = new Paint();
       backgroundPaint = new Paint();
@@ -337,10 +339,11 @@ public class CannonView extends SurfaceView
 
       cannon.draw(canvas); // draw the cannon
 
+      // Change this?
       // draw the GameElements
-      if (cannon.getCannonball() != null &&
-         cannon.getCannonball().isOnScreen())
+      if (cannon.getCannonball() != null && cannon.getCannonball().isOnScreen())
          cannon.getCannonball().draw(canvas);
+         //ImageView cannonball = (ImageView) findViewById(R.drawable.cannonball);
 
       blocker.draw(canvas); // draw the blocker
 

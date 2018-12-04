@@ -2,6 +2,9 @@
 // Represents Cannon and fires the Cannonball
 package com.deitel.cannongame;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -60,13 +63,19 @@ public class Cannon {
 
    // draws the Cannon on the Canvas
    public void draw(Canvas canvas) {
+
+      Resources cannon = view.getResources();
+      Bitmap bit = BitmapFactory.decodeResource(cannon, R.drawable.cannon);
+      canvas.drawBitmap(bit, 0, view.getScreenHeight() / 3, null);
+
+
       // draw cannon barrel
-      canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
-         barrelEnd.y, paint);
+      //canvas.drawLine(0, view.getScreenHeight() / 2, barrelEnd.x,
+         //barrelEnd.y, paint);
 
       // draw cannon base
-      canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
-         (int) baseRadius, paint);
+      //canvas.drawCircle(0, (int) view.getScreenHeight() / 2,
+         //(int) baseRadius, paint);
    }
 
    // returns the Cannonball that this Cannon fired

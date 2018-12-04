@@ -2,6 +2,7 @@
 // Represents the Cannonball that the Cannon fires
 package com.deitel.cannongame;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -56,6 +57,9 @@ public class Cannonball extends GameElement {
    // draws the Cannonball on the given canvas
    @Override
    public void draw(Canvas canvas) {
+
+      //Resources cannon = view.getResources();
+
       canvas.drawCircle(shape.left + getRadius(),
          shape.top + getRadius(), getRadius(), paint);
    }

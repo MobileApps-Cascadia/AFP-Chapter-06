@@ -2,9 +2,12 @@
 // Represents a rectangle-bounded game element
 package com.deitel.cannongame;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
+import static com.deitel.cannongame.CannonView.BOUNCE_SOUND_ID;
 
 public class GameElement {
    protected CannonView view; // the view that contains this GameElement
@@ -12,8 +15,9 @@ public class GameElement {
    protected Rect shape; // the GameElement's rectangular bounds
    private float velocityY; // the vertical velocity of this GameElement
    private int soundId; // the sound associated with this GameElement
+    private Context context;
 
-   // public constructor
+    // public constructor
    public GameElement(CannonView view, int color, int soundId, int x,
       int y, int width, int length, float velocityY) {
       this.view = view;
@@ -32,6 +36,9 @@ public class GameElement {
       if (shape.top < 0 && velocityY < 0 ||
          shape.bottom > view.getScreenHeight() && velocityY > 0)
          velocityY *= -1; // reverse this GameElement's velocity
+
+         view.playSound(CannonView.BOUNCE_SOUND_ID);
+
    }
 
    // draws this GameElement on the given Canvas
